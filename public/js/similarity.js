@@ -33,7 +33,25 @@ function getSimilarityWithFilter(user_data, candidate) {
 }
 
 function getSimilarityBySearch(user_data, search) {
-    return getSimilarityWithFilter(user_data, search);
+    let allResponse = getSimilarity(user_data);
+    let response = {};
+    for (let i = 0; i < Object.keys(allResponse).length; i++) {
+        if (Object.keys(allResponse)[i].includes(search)) {
+            response[Object.keys(allResponse)[i]] = allResponse[Object.keys(allResponse)[i]];
+        }
+    } 
+    //filter objects in value array also
+    for (let i = 0; i < Object.keys(response).length; i++) {
+        let arr = response[Object.keys(response)[i]];
+        let temp = [];
+        for (let j = 0; j < arr.length; j++) {
+            if (arr[j].user.includes(search)) {
+                temp.push(arr[j]);
+            }
+        }
+        response[Object.keys(response)[i]] = temp;
+    }
+    return response;
 }
 
 
