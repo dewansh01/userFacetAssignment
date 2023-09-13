@@ -2,17 +2,25 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
+const similarity = require('./public/js/similarity.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname,""));
 
+//user data
+var user_data = {
+};
+//routes
 app.get('/', (req, res) => res.sendFile('index.html'));
-
 app.post('/', (req, res) => {
-    //extract the data from the post request
     var data = req.body;
-    console.log(data);
-    res.sendFile('response.html', {root: __dirname})
+    var name = data.name;
+    user_data[name] = {'name':name,'data':data};
+    console.log(user_data);
+    res.sendFile('response.html',{root:__dirname});
 });
+
+app.get('/allSurvey', (req, res) => res.send({status:"pending"}));
+app.get('/similarity',(req,res) => res.send(JSON.stringify(similarity.getSimilarity(user_data))));
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
